@@ -1,23 +1,19 @@
-import parser
+import csv_parser
 import os
 
 def format(xml_parser):
     print("Circ ", xml_parser.author)
-    print("CD    [", xml_parser.title, "]")
+    print("CD   [", xml_parser.title, "]")
     print("")
 
 
-XML_FOLDER_PATH = os.path.dirname(os.path.abspath(__file__)) + "\\" + "inputFiles"
-print(XML_FOLDER_PATH)
+INPUT_FOLDER_PATH = os.path.dirname(os.path.abspath(__file__)) + "\\" + "inputFiles"
+print(INPUT_FOLDER_PATH)
 
-xml_files = os.listdir(XML_FOLDER_PATH)
-xml_parser = parser.Parser()
+csv_files = os.listdir(INPUT_FOLDER_PATH)
+csv_parser = csv_parser.CSV_Parser()
 
-for file in xml_files:
-    file_path = XML_FOLDER_PATH + "\\" + file
-    xml_parser.init_new_xml(file_path, file)
-    xml_parser.parse()
-    format(xml_parser)
-    
-
-
+for file in csv_files:
+    file_path = INPUT_FOLDER_PATH + "\\" + file
+    csv_parser.init_new_csv(file_path, file)
+    csv_parser.parse()
