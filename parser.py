@@ -1,18 +1,24 @@
 from distutils.command.install_egg_info import safe_name
+from tarfile import RECORDSIZE
 from traceback import print_tb
-from turtle import title
+from turtle import title, write_docstringdict
 from bs4 import BeautifulSoup
 
 
 class Parser:
 
-    def __init__(self, xml_loc = -1):
+    def __init__(self, xml_loc = -1, fileName =""):
         if xml_loc == -1:
             return
-        self.init_new_xml(xml_loc)
+        self.init_new_xml(xml_loc, fileName)
         
-    def init_new_xml(self, new_xml):
+    def init_new_xml(self, new_xml,fileName):
         self.FILE_PATH = new_xml
+        self.FILE_NAME = fileName
+
+        newFile =  self.FILE_NAME
+        self.newFile = open(newFile, 'w', encoding="utf-8")
+
         try:
             self.f =  open(self.FILE_PATH, encoding="utf8")
         except:
@@ -44,27 +50,38 @@ class Parser:
         self.author = self.sf_c.replace(":","").strip()
         self.author = self.sf_c.replace("/","").strip()
 
-    def printBook(self):
-        print("Circ ", self.author)
-        print("CD    [", self.title, "]")
-        print("")
+    def createEntry(self):
+        entry = "Circ " + self.author + "\n"
+        entry +="CD    [" + self.title + "]" + "\n"
+        entry += "\n"
+
+        print(entry)
+        return entry
 
     def parse(self):
         try:
             data = self.f.read()
             Bs_data = BeautifulSoup(data, "xml")
             Bs_data=Bs_data.find_all('datafield', {'tag':'245'})
-            i = 0
+            self.record_count = 0
 
             for tags in Bs_data:
                 self.locateInfo(tags)
                 self.cleanInfo()
-                self.printBook()
-                i=i+1
-            self.record_count = i
-        
+                self.writeEntryToFile()
+                self.record_count += 1
+      
         except:
+            
             self.title = "-1"
             self.sub_title = "-1"
             self.author = "-1"
+        
+        
+        print("Record Count:" , self.record_count)
+
+    def writeEntryToFile(self):
+        entry = self.createEntry()
+        self.newFile.write(entry)
+
 

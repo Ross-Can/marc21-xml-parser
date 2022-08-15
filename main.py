@@ -15,7 +15,7 @@ xml_parser = parser.Parser()
 
 for file in xml_files:
     file_path = XML_FOLDER_PATH + "\\" + file
-    xml_parser.init_new_xml(file_path)
+    xml_parser.init_new_xml(file_path, file)
     xml_parser.parse()
     format(xml_parser)
     
