@@ -38,7 +38,7 @@ class CSV_Parser:
 
 
     def parse(self):
-       reader = csv.DictReader(self.f)
+       reader = csv.DictReader(self.FILE_PATH)
        for row in reader:
         try:
             self.title = row[' Title'].replace('/',"").strip()

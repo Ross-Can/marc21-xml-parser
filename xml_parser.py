@@ -5,7 +5,7 @@ from turtle import title, write_docstringdict
 from bs4 import BeautifulSoup
 
 
-class Parser:
+class XML_Parser:
 
     def __init__(self, xml_loc = -1, fileName =""):
         if xml_loc == -1:
