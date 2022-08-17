@@ -24,6 +24,16 @@ class CSV_Parser:
             self.f =  open(self.FILE_PATH, encoding="utf8")
         except:
             print ("[Error] No such file:", self.FILE_PATH)
+
+    def match(self,txt,regEx):
+        return re.search(regEx,txt)     
+    
+    def cleanData(self):
+        if self.match(self.author, "((.|\s)+,){2}(.|\s|\d)+."):
+            print(self.author)
+        if self.author.endswith('.'):
+            self.author = self.author.rstrip('.')
+     
             
     def addEntry(self):
 
@@ -38,7 +48,7 @@ class CSV_Parser:
 
 
     def parse(self):
-       reader = csv.DictReader(self.FILE_PATH)
+       reader = csv.DictReader(self.f)
        for row in reader:
         try:
             self.title = row[' Title'].replace('/',"").strip()
@@ -56,6 +66,7 @@ class CSV_Parser:
         except:
               self.cn = ""
 
+        self.cleanData()
         self.addEntry()
        self.writeEntryToFile()
         

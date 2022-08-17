@@ -1,11 +1,13 @@
 from msilib.schema import File
+from sre_constants import SUCCESS
+from tkinter import TRUE
 from unittest import skip
 from xml.etree.ElementTree import XML
 import csv_parser
 import xml_parser
 import os
 
-INPUT_FOLDER_PATH = os.path.dirname(os.path.abspath(__file__)) + "\\" + "inputFileds"
+INPUT_FOLDER_PATH = os.path.dirname(os.path.abspath(__file__)) + "\\" + "inputFiles"
 
 
 try:
@@ -16,7 +18,7 @@ except:
 
 for file in files:
     file_path = INPUT_FOLDER_PATH + "\\" + file
-
+    SUCCESS = TRUE
     print("\nReading:", file.strip())
 
     if file.endswith(".csv"):
@@ -31,3 +33,6 @@ for file in files:
 
     else:
         print("ERROR: File not in xml or csv format")
+        SUCCESS = False
+
+    print("....File Parsed and Outputed") if SUCCESS else next
