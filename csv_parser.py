@@ -1,10 +1,15 @@
 from asyncore import write
+from cgitb import text
 import csv
+from dataclasses import replace
 import re
 from turtle import title
 from venv import create
 
 class CSV_Parser:
+
+    jobTitles = ["performer","instrumentalist", "composer", "singer", "lyricist","conductor"]
+    OUTPUT_FILE_EXT = ".txt"
 
     def __init__(self, csv_loc = -1, fileName =""):
         if csv_loc == -1:
@@ -15,7 +20,7 @@ class CSV_Parser:
         self.FILE_PATH = csv_loc
         self.FILE_NAME = fileName
 
-        newFile =  self.FILE_NAME
+        newFile =  self.FILE_NAME.replace('.csv', self.OUTPUT_FILE_EXT)
         self.newFile = open(newFile, 'w', encoding="utf-8")
 
         self.items = []
@@ -24,15 +29,40 @@ class CSV_Parser:
             self.f =  open(self.FILE_PATH, encoding="utf8")
         except:
             print ("[Error] No such file:", self.FILE_PATH)
+            return
+
 
     def match(self,txt,regEx):
-        return re.search(regEx,txt)     
+        return re.search(regEx,txt)
+
+    def removeDate(self):
+        txtLength = len(self.author)
+        loc_of_comma = self.author.index(',')
+
+        removeText = self.author[loc_of_comma:txtLength]
+        removeText = removeText.lstrip(',')
+
+        loc_of_comma = removeText.index(',')
+        removeText = removeText[loc_of_comma:len(removeText)]
+        self.author = self.author.replace(removeText, "")
+
+    def removeJobTitle(self):
+        for job in self.jobTitles:
+            self.author = self.author.replace(", " + job, "").strip()
+        self.author = self.author.replace(". Choir", "").strip()
+
+    def cleanAuthor(self):
+        self.removeDate()
+        
+       
+
     
     def cleanData(self):
         if self.match(self.author, "((.|\s)+,){2}(.|\s|\d)+."):
-            print(self.author)
+            self.cleanAuthor()
         if self.author.endswith('.'):
             self.author = self.author.rstrip('.')
+            self.removeJobTitle()
      
             
     def addEntry(self):
